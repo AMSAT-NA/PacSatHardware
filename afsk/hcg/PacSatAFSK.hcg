@@ -237,8 +237,7 @@
         <NAME>lin.h</NAME>
       </HDRLIN>
       <SRCLIN>
-        <NAME>lin.c</NAME>
-      </SRCLIN>
+        </SRCLIN>
       <HDRMIBSPI_R>
         <NAME>reg_mibspi.h</NAME>
       </HDRMIBSPI_R>
@@ -246,8 +245,7 @@
         <NAME>mibspi.h</NAME>
       </HDRMIBSPI>
       <SRCMIBSPI>
-        <NAME>mibspi.c</NAME>
-      </SRCMIBSPI>
+        </SRCMIBSPI>
       <HDRSPI_R>
         <NAME>reg_spi.h</NAME>
       </HDRSPI_R>
@@ -255,7 +253,8 @@
         <NAME>spi.h</NAME>
       </HDRSPI>
       <SRCSPI>
-        </SRCSPI>
+        <NAME>spi.c</NAME>
+      </SRCSPI>
       <HDRCAN_R>
         <NAME>reg_can.h</NAME>
       </HDRCAN_R>
@@ -263,8 +262,7 @@
         <NAME>can.h</NAME>
       </HDRCAN>
       <SRCCAN>
-        <NAME>can.c</NAME>
-      </SRCCAN>
+        </SRCCAN>
       <HDRADC_R>
         <NAME>reg_adc.h</NAME>
       </HDRADC_R>
@@ -460,7 +458,7 @@
         <PATH>include\lin.h</PATH>
       </HDRLIN>
       <SRCLIN>
-        <PATH>source\lin.c</PATH>
+        <PATH></PATH>
       </SRCLIN>
     </FILENAMES>
   </LIN>
@@ -473,7 +471,7 @@
         <PATH>include\mibspi.h</PATH>
       </HDRMIBSPI>
       <SRCMIBSPI>
-        <PATH>source\mibspi.c</PATH>
+        <PATH></PATH>
       </SRCMIBSPI>
     </FILENAMES>
   </MIBSPI>
@@ -486,7 +484,7 @@
         <PATH>include\spi.h</PATH>
       </HDRSPI>
       <SRCSPI>
-        <PATH></PATH>
+        <PATH>source\spi.c</PATH>
       </SRCSPI>
     </FILENAMES>
   </SPI>
@@ -499,7 +497,7 @@
         <PATH>include\can.h</PATH>
       </HDRCAN>
       <SRCCAN>
-        <PATH>source\can.c</PATH>
+        <PATH></PATH>
       </SRCCAN>
     </FILENAMES>
   </CAN>
