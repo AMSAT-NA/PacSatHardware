@@ -51,11 +51,9 @@
 #include "esm.h"
 #include "sys_selftest.h"
 #include "adc.h"
-#include "can.h"
 #include "gio.h"
-#include "lin.h"
-#include "mibspi.h"
 #include "sci.h"
+#include "spi.h"
 #include "rti.h"
 #include "i2c.h"
 #include "sys_dma.h"
@@ -122,32 +120,6 @@ void adcNotification(adcBASE_t *adc, uint32 group)
 
 /* USER CODE BEGIN (12) */
 /* USER CODE END */
-#pragma WEAK(canErrorNotification)
-void canErrorNotification(canBASE_t *node, uint32 notification)
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (13) */
-/* USER CODE END */
-}
-
-#pragma WEAK(canStatusChangeNotification)
-void canStatusChangeNotification(canBASE_t *node, uint32 notification)  
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (14) */
-/* USER CODE END */
-}
-
-#pragma WEAK(canMessageNotification)
-void canMessageNotification(canBASE_t *node, uint32 messageBox)  
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (15) */
-/* USER CODE END */
-}
-
-/* USER CODE BEGIN (16) */
-/* USER CODE END */
 #pragma WEAK(gioNotification)
 void gioNotification(gioPORT_t *port, uint32 bit)
 {
@@ -168,35 +140,6 @@ void i2cNotification(i2cBASE_t *i2c, uint32 flags)
 
 /* USER CODE BEGIN (22) */
 /* USER CODE END */
-#pragma WEAK(linNotification)
-void linNotification(linBASE_t *lin, uint32 flags)      
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (23) */
-/* USER CODE END */
-}
-
-/* USER CODE BEGIN (24) */
-/* USER CODE END */
-#pragma WEAK(mibspiNotification)
-void mibspiNotification(mibspiBASE_t *mibspi, uint32 flags)
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (25) */
-/* USER CODE END */
-}
-
-/* USER CODE BEGIN (26) */
-/* USER CODE END */
-#pragma WEAK(mibspiGroupNotification)
-void mibspiGroupNotification(mibspiBASE_t *mibspi, uint32 group)
-{
-/*  enter user code between the USER CODE BEGIN and USER CODE END. */
-/* USER CODE BEGIN (27) */
-/* USER CODE END */
-}
-/* USER CODE BEGIN (28) */
-/* USER CODE END */
 
 #pragma WEAK(sciNotification)
 void sciNotification(sciBASE_t *sci, uint32 flags)     
@@ -207,6 +150,26 @@ void sciNotification(sciBASE_t *sci, uint32 flags)
 }
 
 /* USER CODE BEGIN (30) */
+/* USER CODE END */
+#pragma WEAK(spiNotification)
+void spiNotification(spiBASE_t *spi, uint32 flags)
+{
+/*  enter user code between the USER CODE BEGIN and USER CODE END. */
+/* USER CODE BEGIN (31) */
+/* USER CODE END */
+}
+
+/* USER CODE BEGIN (32) */
+/* USER CODE END */
+#pragma WEAK(spiEndNotification)
+void spiEndNotification(spiBASE_t *spi)
+{
+/*  enter user code between the USER CODE BEGIN and USER CODE END. */
+/* USER CODE BEGIN (33) */
+/* USER CODE END */
+}
+
+/* USER CODE BEGIN (34) */
 /* USER CODE END */
 
 

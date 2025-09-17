@@ -171,7 +171,7 @@ enum systemClockSource
 *
 *   AVCLK2 Domain frequency exported from HALCoGen GUI
 */
-#define AVCLK2_FREQ  0.0F
+#define AVCLK2_FREQ  00.0F
 
 /** @def AVCLK3_FREQ
 *   @brief AVCLK3 Domain frequency exported from HALCoGen GUI
