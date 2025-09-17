@@ -3,7 +3,7 @@
 INSTALL_DIR=../PacSatSW
 
 if [ $# -lt 2 ]; then
-    echo "Usage: install.sh [launchpad|blinky] <install-dir>"
+    echo "Usage: install.sh [launchpad|blinky|afsk] <install-dir>"
     exit 1
 fi
 

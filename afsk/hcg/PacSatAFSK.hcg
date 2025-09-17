@@ -3,7 +3,7 @@
   <DEVICE>
     <family>TMS570LS09x_07x</family>
     <device>TMS570LS0914PGE</device>
-    <dilfile>PACSatBlinky.dil</dilfile>
+    <dilfile>PacSatAFSK.dil</dilfile>
     <tools>ti</tools>
   </DEVICE>
   <VERSION>
@@ -236,14 +236,18 @@
       <HDRLIN>
         <NAME>lin.h</NAME>
       </HDRLIN>
-      <SRCLIN/>
+      <SRCLIN>
+        <NAME>lin.c</NAME>
+      </SRCLIN>
       <HDRMIBSPI_R>
         <NAME>reg_mibspi.h</NAME>
       </HDRMIBSPI_R>
       <HDRMIBSPI>
         <NAME>mibspi.h</NAME>
       </HDRMIBSPI>
-      <SRCMIBSPI/>
+      <SRCMIBSPI>
+        <NAME>mibspi.c</NAME>
+      </SRCMIBSPI>
       <HDRSPI_R>
         <NAME>reg_spi.h</NAME>
       </HDRSPI_R>
@@ -251,15 +255,16 @@
         <NAME>spi.h</NAME>
       </HDRSPI>
       <SRCSPI>
-        <NAME>spi.c</NAME>
-      </SRCSPI>
+        </SRCSPI>
       <HDRCAN_R>
         <NAME>reg_can.h</NAME>
       </HDRCAN_R>
       <HDRCAN>
         <NAME>can.h</NAME>
       </HDRCAN>
-      <SRCCAN/>
+      <SRCCAN>
+        <NAME>can.c</NAME>
+      </SRCCAN>
       <HDRADC_R>
         <NAME>reg_adc.h</NAME>
       </HDRADC_R>
@@ -455,7 +460,7 @@
         <PATH>include\lin.h</PATH>
       </HDRLIN>
       <SRCLIN>
-        <PATH/>
+        <PATH>source\lin.c</PATH>
       </SRCLIN>
     </FILENAMES>
   </LIN>
@@ -468,7 +473,7 @@
         <PATH>include\mibspi.h</PATH>
       </HDRMIBSPI>
       <SRCMIBSPI>
-        <PATH/>
+        <PATH>source\mibspi.c</PATH>
       </SRCMIBSPI>
     </FILENAMES>
   </MIBSPI>
@@ -481,7 +486,7 @@
         <PATH>include\spi.h</PATH>
       </HDRSPI>
       <SRCSPI>
-        <PATH>source\spi.c</PATH>
+        <PATH></PATH>
       </SRCSPI>
     </FILENAMES>
   </SPI>
@@ -494,7 +499,7 @@
         <PATH>include\can.h</PATH>
       </HDRCAN>
       <SRCCAN>
-        <PATH/>
+        <PATH>source\can.c</PATH>
       </SRCCAN>
     </FILENAMES>
   </CAN>
