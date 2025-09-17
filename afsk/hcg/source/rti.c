@@ -862,6 +862,7 @@ void rtiGetConfigValue(rti_config_reg_t *config_reg, config_value_type_t type)
 void vPortPreemptiveTick(void)
 {
 /* USER CODE BEGIN (74) */
+#pragma WEAK(vPortPreemptiveTick)
 /* USER CODE END */
 
     rtiREG1->INTFLAG = 1U;
