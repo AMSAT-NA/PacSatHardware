@@ -85,29 +85,6 @@ void canInit(void)
 {
 /* USER CODE BEGIN (4) */
 /* USER CODE END */
-    /** @b Initialize @b CAN1: */
-
-
-    /** - Setup control register
-    *     - Enter initialization mode
-    */
-    canREG1->CTL = 0x00000001U;
-				 
-     /** - CAN1 Port output values */
-    canREG1->TIOC =  (uint32)((uint32)1U  << 18U )
-                   | (uint32)((uint32)0U  << 17U )
-                   | (uint32)((uint32)0U  << 16U )                
-                   | (uint32)((uint32)0U  << 3U )  
-                   | (uint32)((uint32)1U  << 2U )    
-                   | (uint32)((uint32)1U << 1U );
-                   
-    canREG1->RIOC =  (uint32)((uint32)1U  << 18U )    
-                   | (uint32)((uint32)0U  << 17U )  
-                   | (uint32)((uint32)0U  << 16U )   
-                   | (uint32)((uint32)0U  << 3U )  
-                   | (uint32)((uint32)1U  << 2U )
-                   | (uint32)((uint32)1U <<1U );        
-
 
     /** @b Initialize @b CAN2: */
 
@@ -1323,57 +1300,6 @@ uint32 canIoRxGetBit(canBASE_t *node)
     return (node->RIOC & 1U);
 }
 
-
-/** @fn void can1GetConfigValue(can_config_reg_t *config_reg, config_value_type_t type)
-*   @brief Get the initial or current values of the CAN1 configuration registers
-*
-*    @param[in] *config_reg: pointer to the struct to which the initial or current 
-*                           value of the configuration registers need to be stored
-*    @param[in] type:     whether initial or current value of the configuration registers need to be stored
-*                        - InitialValue: initial value of the configuration registers will be stored 
-*                                       in the struct pointed by config_reg
-*                        - CurrentValue: initial value of the configuration registers will be stored 
-*                                       in the struct pointed by config_reg
-*
-*   This function will copy the initial or current value (depending on the parameter 'type') 
-*   of the configuration registers to the struct pointed by config_reg
-*
-*/
-/* SourceId : CAN_SourceId_017 */
-/* DesignId : CAN_DesignId_017 */
-/* Requirements : HL_SR224 */
-void can1GetConfigValue(can_config_reg_t *config_reg, config_value_type_t type)
-{
-    if (type == InitialValue)
-    {
-        config_reg->CONFIG_CTL     = CAN1_CTL_CONFIGVALUE;    
-        config_reg->CONFIG_ES      = CAN1_ES_CONFIGVALUE;     
-        config_reg->CONFIG_BTR     = CAN1_BTR_CONFIGVALUE;    
-        config_reg->CONFIG_TEST    = CAN1_TEST_CONFIGVALUE;   
-        config_reg->CONFIG_ABOTR   = CAN1_ABOTR_CONFIGVALUE;  
-        config_reg->CONFIG_INTMUX0 = CAN1_INTMUX0_CONFIGVALUE;
-        config_reg->CONFIG_INTMUX1 = CAN1_INTMUX2_CONFIGVALUE;
-        config_reg->CONFIG_INTMUX2 = CAN1_INTMUX2_CONFIGVALUE;
-        config_reg->CONFIG_INTMUX3 = CAN1_INTMUX3_CONFIGVALUE;
-        config_reg->CONFIG_TIOC    = CAN1_TIOC_CONFIGVALUE;   
-        config_reg->CONFIG_RIOC    = CAN1_RIOC_CONFIGVALUE;    
-    }
-    else
-    {
-    /*SAFETYMCUSW 134 S MR:12.2 <APPROVED> "LDRA Tool issue" */
-        config_reg->CONFIG_CTL     = canREG1->CTL;   
-        config_reg->CONFIG_ES      = canREG1->ES;     
-        config_reg->CONFIG_BTR     = canREG1->BTR;    
-        config_reg->CONFIG_TEST    = canREG1->TEST;   
-        config_reg->CONFIG_ABOTR   = canREG1->ABOTR;  
-        config_reg->CONFIG_INTMUX0 = canREG1->INTMUXx[0];
-        config_reg->CONFIG_INTMUX1 = canREG1->INTMUXx[1];
-        config_reg->CONFIG_INTMUX2 = canREG1->INTMUXx[2];
-        config_reg->CONFIG_INTMUX3 = canREG1->INTMUXx[3];
-        config_reg->CONFIG_TIOC    = canREG1->TIOC;
-        config_reg->CONFIG_RIOC    = canREG1->RIOC;   
-    }
-}
 /** @fn void can2GetConfigValue(can_config_reg_t *config_reg, config_value_type_t type)
 *   @brief Get the initial or current values of the CAN2 configuration registers
 *
@@ -1476,8 +1402,205 @@ void can3GetConfigValue(can_config_reg_t *config_reg, config_value_type_t type)
 }
 
 
+/* USER CODE BEGIN (46) */
+/* USER CODE END */
+
+/** @fn void can2HighLevelInterrupt(void)
+*   @brief CAN2 Level 0 Interrupt Handler
+*/
+#pragma CODE_STATE(can2HighLevelInterrupt, 32)
+#pragma INTERRUPT(can2HighLevelInterrupt, IRQ)
+
+/* SourceId : CAN_SourceId_022 */
+/* DesignId : CAN_DesignId_018 */
+/* Requirements : HL_SR221, HL_SR222, HL_SR223 */
+void can2HighLevelInterrupt(void)
+{
+    uint32 value = canREG2->INT;
+	uint32 ES_value;
+    
+/* USER CODE BEGIN (47) */
+/* USER CODE END */
+
+    if (value == 0x8000U)
+    {
+        /* Read Error and Status Register*/
+        ES_value = canREG2->ES;
+        
+        /* Check for Error (PES, Boff, EWarn & EPass) captured */
+        if((ES_value & 0x1E0U) != 0U)
+        {
+            canErrorNotification(canREG2, ES_value & 0x1E0U);
+        }
+        else
+        {   
+            /* Call General Can notification incase of RxOK, TxOK, PDA, WakeupPnd Interrupt */
+            canStatusChangeNotification(canREG2, ES_value & 0x618U);
+        }
+    }
+    else
+    {
+        /** - Setup IF1 for clear pending interrupt flag */
+        /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+        while ((canREG2->IF1STAT & 0x80U) ==0x80U)
+        { 
+        } /* Wait */
+
+        canREG2->IF1CMD = 0x08U;
+        /*SAFETYMCUSW 93 S MR: 6.1,6.2,10.1,10.2,10.3,10.4 <APPROVED> "LDRA Tool issue" */
+        canREG2->IF1NO  = (uint8) value;
+        
+        /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+        while ((canREG2->IF1STAT & 0x80U) ==0x80U)
+        { 
+        } /* Wait */
+        canREG2->IF1CMD = 0x87U;
+
+        canMessageNotification(canREG2, value);
+    }
+/* USER CODE BEGIN (48) */
+/* USER CODE END */
+	
+}
+
+/* USER CODE BEGIN (49) */
+/* USER CODE END */
+
+/** @fn void can2LowLevelInterrupt(void)
+*   @brief CAN2 Level 1 Interrupt Handler
+*/
+#pragma CODE_STATE(can2LowLevelInterrupt, 32)
+#pragma INTERRUPT(can2LowLevelInterrupt, IRQ)
+
+/* SourceId : CAN_SourceId_023 */
+/* DesignId : CAN_DesignId_019 */
+/* Requirements : HL_SR221, HL_SR223 */
+void can2LowLevelInterrupt(void)
+{
+    uint32 messageBox = canREG2->INT >> 16U;
+
+/* USER CODE BEGIN (50) */
+/* USER CODE END */
+
+    /** - Setup IF1 for clear pending interrupt flag */
+    /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+    while ((canREG2->IF1STAT & 0x80U) ==0x80U)
+    { 
+    } /* Wait */
+
+    canREG2->IF1CMD = 0x08U;
+    /*SAFETYMCUSW 93 S MR: 6.1,6.2,10.1,10.2,10.3,10.4 <APPROVED> "LDRA Tool issue" */
+    canREG2->IF1NO  = (uint8) messageBox;
+    
+    /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+    while ((canREG2->IF1STAT & 0x80U) ==0x80U)
+    { 
+    } /* Wait */
+    canREG2->IF1CMD = 0x87U;
+
+    canMessageNotification(canREG2, messageBox);
+
+/* USER CODE BEGIN (51) */
+/* USER CODE END */
+
+}
 
 
+/* USER CODE BEGIN (52) */
+/* USER CODE END */
 
+/** @fn void can3HighLevelInterrupt(void)
+*   @brief CAN3 Level 0 Interrupt Handler
+*/
+#pragma CODE_STATE(can3HighLevelInterrupt, 32)
+#pragma INTERRUPT(can3HighLevelInterrupt, IRQ)
 
+/* SourceId : CAN_SourceId_024 */
+/* DesignId : CAN_DesignId_018 */
+/* Requirements : HL_SR221, HL_SR222, HL_SR223 */
+void can3HighLevelInterrupt(void)
+{
+    uint32 value = canREG3->INT;
+	uint32 ES_value;
+    
+/* USER CODE BEGIN (53) */
+/* USER CODE END */
+
+    if (value == 0x8000U)
+    {
+        /* Read Error and Status Register*/
+        ES_value = canREG3->ES;
+        
+        /* Check for Error (PES, Boff, EWarn & EPass) captured */
+        if((ES_value & 0x1E0U) != 0U)
+        {
+            canErrorNotification(canREG3, ES_value & 0x1E0U);
+        }
+        else
+        {   
+            /* Call General Can notification incase of RxOK, TxOK, PDA, WakeupPnd Interrupt */
+            canStatusChangeNotification(canREG3, ES_value & 0x618U);
+        }
+    }
+    else
+    {
+        /** - Setup IF1 for clear pending interrupt flag */
+        /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+        while ((canREG3->IF1STAT & 0x80U) ==0x80U)
+        { 
+        } /* Wait */
+     
+        canREG3->IF1CMD = 0x08U;
+		/*SAFETYMCUSW 93 S MR: 6.1,6.2,10.1,10.2,10.3,10.4 <APPROVED> "LDRA Tool issue" */
+        canREG3->IF1NO  = (uint8) value;
+        /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+        while ((canREG3->IF1STAT & 0x80U) ==0x80U)
+        { 
+         } /* Wait */
+        canREG3->IF1CMD = 0x87U;
+     
+        canMessageNotification(canREG3, value);
+    }
+/* USER CODE BEGIN (54) */
+/* USER CODE END */
+
+}
+
+/** @fn void can3LowLevelInterrupt(void)
+*   @brief CAN3 Level 1 Interrupt Handler
+*/
+#pragma CODE_STATE(can3LowLevelInterrupt, 32)
+#pragma INTERRUPT(can3LowLevelInterrupt, IRQ)
+
+/* SourceId : CAN_SourceId_025 */
+/* DesignId : CAN_DesignId_019 */
+/* Requirements : HL_SR221, HL_SR223 */
+void can3LowLevelInterrupt(void)
+{
+    uint32 messageBox = canREG3->INT >> 16U;
+    
+/* USER CODE BEGIN (55) */
+/* USER CODE END */
+
+    /** - Setup IF1 for clear pending interrupt flag */
+    /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+    while ((canREG3->IF1STAT & 0x80U) ==0x80U)
+    { 
+    } /* Wait */
+
+    canREG3->IF1CMD = 0x08U;
+    /*SAFETYMCUSW 93 S MR: 6.1,6.2,10.1,10.2,10.3,10.4 <APPROVED> "LDRA Tool issue" */
+    canREG3->IF1NO  = (uint8) messageBox;
+    /*SAFETYMCUSW 28 D MR:NA <APPROVED> "Potentially infinite loop found - Hardware Status check for execution sequence" */
+    while ((canREG3->IF1STAT & 0x80U) ==0x80U)
+    { 
+    } /* Wait */
+    canREG3->IF1CMD = 0x87U;
+
+    canMessageNotification(canREG3, messageBox);
+
+/* USER CODE BEGIN (56) */
+/* USER CODE END */
+	
+}
 
