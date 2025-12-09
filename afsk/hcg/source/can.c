@@ -1495,6 +1495,28 @@ void can2HighLevelInterrupt(void)
 	uint32 ES_value;
     
 /* USER CODE BEGIN (47) */
+    /*
+     * Our own code here, don't clear out the other bits when calling the
+     * notifications, as those bits may be important and we can't get them
+     * again.
+     */
+    if (value == 0x8000U)
+    {
+        /* Read Error and Status Register*/
+        ES_value = canREG2->ES;
+        
+        /* Check for Error (PES, Boff, EWarn & EPass) captured */
+        if((ES_value & 0x1E0U) != 0U)
+        {
+            canErrorNotification(canREG2, ES_value);
+        }
+        else
+        {   
+            /* Call General Can notification incase of RxOK, TxOK, PDA, WakeupPnd Interrupt */
+            canStatusChangeNotification(canREG2, ES_value);
+        }
+	return;
+    }
 /* USER CODE END */
 
     if (value == 0x8000U)
