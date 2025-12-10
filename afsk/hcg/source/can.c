@@ -1615,7 +1615,7 @@ void can3HighLevelInterrupt(void)
      * abuse canStatusChangeNotification for this.
      */
     ES_value = 0; /* Work around warning about ES_value not being used. */
-    canStatusChangeNotification(canREG2, value | ES_value);
+    canStatusChangeNotification(canREG3, value | ES_value);
     return;
 #if 0
 /* USER CODE END */
