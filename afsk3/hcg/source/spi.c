@@ -1696,7 +1696,6 @@ static inline void ForceDummy(unsigned int SPIIndex){
     } else if((g_spiPacket_t[SPIIndex].txdata_ptr == &dummyBuffer[SPIIndex][1])){
         g_spiPacket_t[SPIIndex].txdata_ptr = &dummyBuffer[SPIIndex][0];
     }
-#endif
     /* USER CODE END */
 }
 
@@ -1904,6 +1903,7 @@ void mibspi5HighLevelInterrupt(void)
     }
 
 /* USER CODE BEGIN (73) */
+#endif
 /* USER CODE END */
 }
 
