@@ -432,7 +432,7 @@ void mibspi1HighLevelInterrupt(void)
 #pragma INTERRUPT(mibspi3LowLevelInterrupt, IRQ)
 void mibspi3LowLevelInterrupt(void)
 {
-    GenericSPIInterrupt(spiREG3,0,spiREG3->INTVECT1);
+    GenericSPIInterrupt(spiREG3,2,spiREG3->INTVECT1);
 }
 
 
@@ -443,19 +443,19 @@ void mibspi3HighInterruptLevel(void)
     GenericSPIInterrupt(spiREG3,2,spiREG3->INTVECT0);
 
 }
-#pragma CODE_STATE(mibspi3LowLevelInterrupt, 32)
-#pragma INTERRUPT(mibspi3LowLevelInterrupt, IRQ)
+#pragma CODE_STATE(mibspi5LowLevelInterrupt, 32)
+#pragma INTERRUPT(mibspi5LowLevelInterrupt, IRQ)
 void mibspi5LowLevelInterrupt(void)
 {
-    GenericSPIInterrupt(spiREG5,0,spiREG5->INTVECT1);
+    GenericSPIInterrupt(spiREG5,4,spiREG5->INTVECT1);
 }
 
 
-#pragma CODE_STATE(mibspi3HighInterruptLevel, 32)
-#pragma INTERRUPT(mibspi3HighInterruptLevel, IRQ)
-void mibspi5HighInterruptLevel(void)
+#pragma CODE_STATE(mibspi5HighLevelInterrupt, 32)
+#pragma INTERRUPT(mibspi5HighLevelInterrupt, IRQ)
+void mibspi5HighLevelInterrupt(void)
 {
-    GenericSPIInterrupt(spiREG5,2,spiREG5->INTVECT0);
+    GenericSPIInterrupt(spiREG5,4,spiREG5->INTVECT0);
 
 }
 static inline void ForceDummy(unsigned int SPIIndex){
