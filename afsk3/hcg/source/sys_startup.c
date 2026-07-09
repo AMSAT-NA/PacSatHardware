@@ -138,6 +138,13 @@ void _c_int00(void)
     if ((SYS_EXCEPTION & POWERON_RESET) != 0U)
     {		
 /* USER CODE BEGIN (12) */
+        /* Add condition to check whether PLL can be started successfully */
+        if (_errata_SSWF021_45_pll1(PLL_RETRIES) != 0U)
+        {
+            /* Put system in a safe state */
+			handlePLLLockFail();
+        }
+#if 0 /* Don't clear SYSESR (SYS_EXCEPTION), we want those bits later. */
 /* USER CODE END */
         /* Add condition to check whether PLL can be started successfully */
         if (_errata_SSWF021_45_pll1(PLL_RETRIES) != 0U)
@@ -149,6 +156,7 @@ void _c_int00(void)
         SYS_EXCEPTION = 0xFFFFU;
 
 /* USER CODE BEGIN (13) */
+#endif
 /* USER CODE END */
 /* USER CODE BEGIN (14) */
 /* USER CODE END */
@@ -177,6 +185,7 @@ void _c_int00(void)
         {
             /* Add user code here to handle watchdog violation. */ 
 /* USER CODE BEGIN (17) */
+#if 0
 /* USER CODE END */
 
             /* Clear the Watchdog reset flag in Exception Status register */ 
@@ -190,6 +199,7 @@ void _c_int00(void)
             /* Clear the ICEPICK reset flag in Exception Status register */ 
             SYS_EXCEPTION = ICEPICK_RESET;
 /* USER CODE BEGIN (19) */
+#endif
 /* USER CODE END */
 		}
     }
@@ -201,12 +211,14 @@ void _c_int00(void)
         by toggling the "CPU RESET" bit of the CPU Reset Control Register. */
 
 /* USER CODE BEGIN (20) */
+#if 0
 /* USER CODE END */
 
         /* clear all reset status flags */
         SYS_EXCEPTION = CPU_RESET;
 
 /* USER CODE BEGIN (21) */
+#endif
 /* USER CODE END */
 
     }
