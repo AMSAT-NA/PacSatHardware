@@ -712,7 +712,7 @@ void _c_int00(void)
 /* USER CODE BEGIN (75) */
     if (SYS_EXCEPTION & POWERON_RESET) {
 	/* Data isn't valid. */
-	SaveAcrossReset.fields.errorCode = PowerCycle;
+	SaveAcrossReset.errorCode = PowerCycle;
     } else {
 	unsigned int i;
 	uint16_t *saddr = ((uint16_t *) SPI1_MBRAM_ADDR) + 1;
@@ -727,18 +727,18 @@ void _c_int00(void)
 	*SPI1_SPIGCR0_ADDR = 0; /* Put SPI1 back in reset. */
 
 	if (SYS_EXCEPTION & OSC_FAILURE_RESET)
-	    SaveAcrossReset.fields.errorCode = OscFailure;
+	    SaveAcrossReset.errorCode = OscFailure;
 	else if (SYS_EXCEPTION & WATCHDOG_RESET)
-	    SaveAcrossReset.fields.errorCode = IntWatchdog;
+	    SaveAcrossReset.errorCode = IntWatchdog;
 	else if (SYS_EXCEPTION & SW_RESET) {
 	    /*
 	     * If it's a software reset, that may mean that an error
 	     * was set that we need to preserve.
 	     */
-	    if (SaveAcrossReset.fields.errorCode == 0)
-		SaveAcrossReset.fields.errorCode = SoftwareReset;
+	    if (SaveAcrossReset.errorCode == 0)
+		SaveAcrossReset.errorCode = SoftwareReset;
 	} else if (SYS_EXCEPTION & 0x8) /* EXTRST isn't a define? */
-	    SaveAcrossReset.fields.errorCode = ExternalReset;
+	    SaveAcrossReset.errorCode = ExternalReset;
     }
     SYS_EXCEPTION = 0xFFFFU; /* Now we can clear SYS_EXCEPTION. */
 /* USER CODE END */
