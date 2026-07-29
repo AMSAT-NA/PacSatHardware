@@ -27,3 +27,5 @@ echo Installing $FOLDER/hcg files in $INSTALL_DIR
 cp -r $FOLDER/hcg $INSTALL_DIR || exit 1
 echo Installing $FOLDER/hcgExtra files in $INSTALL_DIR
 cp -r $FOLDER/hcgExtras $INSTALL_DIR || exit 1
+echo "Removing $INSTALL_DIR/hcg/source/sys_link.cmd"
+rm -f "$INSTALL_DIR/hcg/source/sys_link.cmd"
