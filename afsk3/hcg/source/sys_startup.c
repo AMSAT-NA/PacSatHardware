@@ -481,6 +481,13 @@ void _c_int00(void)
              ,(uint32) PBIST_March13N_DP);
 
 /* USER CODE BEGIN (40) */
+    /*
+     * The interrupt vectors must be installed before the ECC test because
+     * the data abort vector gets called.
+     */
+    extern uint32_t resetEntry;
+    extern uint32_t *int_vec_ptr;
+    int_vec_ptr = &resetEntry;
 /* USER CODE END */
 
     /* Test the CPU ECC mechanism for RAM accesses.
