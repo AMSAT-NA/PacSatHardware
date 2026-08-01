@@ -64,6 +64,7 @@
 
 #include "errata_SSWF021_45.h"
 /* USER CODE BEGIN (1) */
+#include "loader_config.h"
 /* USER CODE END */
 
 
@@ -100,6 +101,16 @@ void _c_int00(void);
 void _c_int00(void)
 {    
 /* USER CODE BEGIN (5) */
+    /*
+     * The interrupt vectors must be installed before the ECC test because
+     * the data abort vector gets called.
+     */
+#ifdef USE_BOOTLOADER
+    extern uint32_t resetEntry;
+    extern uint32_t *int_vec_ptr;
+    int_vec_ptr = &resetEntry;
+#else
+    /* The bootloader has already done the core init. */
 /* USER CODE END */
 
     /* Initialize Core Registers to avoid CCM Error */
@@ -121,6 +132,7 @@ void _c_int00(void)
     _coreEnableEventBusExport_();
 
 /* USER CODE BEGIN (11) */
+#endif
 /* USER CODE END */
 
         /* Workaround for Errata CORTEXR4 66 */
